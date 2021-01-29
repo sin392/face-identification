@@ -1,0 +1,10 @@
+*
+
+!enroll
+
+!.gitignore
+!main.py
+!enroll.py
+!model.py
+!visualize.py
+!Pipfile
