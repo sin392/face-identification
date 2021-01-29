@@ -1,2 +1,42 @@
-# face-identification
-for lab project
+# Description
+**main.py**  
+動画/カメラ入力に対して、顔検出・特徴量抽出・識別を行います。識別の際には事前に登録話者の特徴量をテーブルで保存する必要があります(enroll.py)。
+識別のためには、コサイン類似度を用い、閾値以下の類似度をもつ人物はunknownとして識別しています。
+また、登録人物が検出された際には、滞在時間の監視を開始し、一定時間フレームアウトするまでを滞在時間として記録します。
+(一部、テストのために実用にそぐわない処理が残っている箇所があります)
+ 
+ 
+**model.py**  
+顔検出、及び特徴量抽出のためのモデルを記述しています。
+ 
+ 
+**enroll.py**  
+登録する人物の顔画像を特徴量エンコーディングし、テーブルとしてシリアライズし保存します。
+ディレクトリ ``enroll`` から、階層ごとラベル、サンプルの順番で読み込みを行います。
+```
+enroll - Identity-A - sample-A-0.jpg
+                      sample-A-1.jpg
+                                 ...
+       - Identity-B - sample-B-0.jpg
+                                 ...
+```
+
+**visualize.py**  
+特徴量表現可視化のためのコードです。
+
+---
+使用言語：Python  
+フレームワーク：Pytorch  
+ライブラリ：facenet-pytorch  
+使用モデル：MTCNN, InceptionResnetV1  
+
+# usage
+1. 顔画像を``enroll``にenroll/label/sample.jpgのような形式で保存する。
+2. enroll.pyを実行すると、labelとembeddingが格納されたDataframeをシリアライズしたenroll_df.pklが生成される。
+3. 動画/カメラを選択（現在はコード内にハードコードしてある）し、main.pyを実行。
+4. 検出された人物の滞在時間に関するログ(time_stamp.csv)と検出結果(output.csv)が出力される
+
+# note
+* 現状フレームごとの処理に0.1~0.3sかかる
+⇨　実利用ではフレームレート低くていいので問題ない？
+* 誤検出の抑制のため、識別を数フレームの結果を集約して行うことも検討
